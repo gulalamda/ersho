@@ -1,6 +1,6 @@
-package org.example.ersho.Mapper;
+package org.example.ersho.mapper;
 
-import org.example.ersho.EntityDto.Student;
+import org.example.ersho.entityDto.Student;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

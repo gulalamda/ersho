@@ -1,9 +1,9 @@
 package org.example.ersho.Service;
 
-import org.example.ersho.EntityDto.LoginDto;
-import org.example.ersho.EntityDto.Student;
+import org.example.ersho.entityDto.LoginDto;
+import org.example.ersho.entityDto.Student;
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.example.ersho.EntityVo.LoginVo;
+import org.example.ersho.entityVo.LoginVo;
 
 /**
  * <p>
@@ -15,5 +15,5 @@ import org.example.ersho.EntityVo.LoginVo;
  */
 public interface IStudentService extends IService<Student> {
 
-    String Login(LoginDto);
+    LoginVo login(LoginDto loginDto);
 }
