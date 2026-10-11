@@ -46,6 +46,7 @@ public class Goods implements Serializable {
 
     @ApiModelProperty(value = "商品简介")
     private String description;
-
+    @ApiModelProperty(value = "主人")
+    private Integer sellerId;
 
 }

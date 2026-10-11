@@ -34,4 +34,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         return Result.success(goodsList);
 
     }
-}
+
+    }
+
+

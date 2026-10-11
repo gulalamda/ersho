@@ -39,4 +39,5 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         vo.setJwt(JwtUtil.getToken(claims));
         return vo;
     }
+
 }

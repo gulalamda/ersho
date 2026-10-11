@@ -18,6 +18,7 @@ public class JwtUtil {
     private JwtUtil() {
     }
     public static String getToken(Map<String, Object> claims) {
+
         long now = System.currentTimeMillis();
         return Jwts.builder()
                 .addClaims(claims)
@@ -32,5 +33,12 @@ public class JwtUtil {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
+
+    }
+    public static Integer parseuserId(String token){
+        return (Integer)parseToken(token).get("id");
+    }
+    public static String parseuseraddress(String token){
+        return (String) parseToken(token).get("address");
     }
 }

@@ -16,4 +16,6 @@ import org.example.ersho.entityVo.LoginVo;
 public interface IStudentService extends IService<Student> {
 
     LoginVo login(LoginDto loginDto);
+
+
 }

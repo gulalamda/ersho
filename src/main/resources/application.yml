@@ -8,26 +8,29 @@ spring:
     username: root
     password: root
 
+# 注意：这里原来是缩进错位的，mybatis-plus 被写成了 spring.datasource.mybatis-plus，
+# 所以下面这些配置一个都没生效。现在提到顶层。
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: org.example.ersho.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
-    mybatis-plus:
-      mapper-locations: classpath:mapper/*.xml
-      type-aliases-package: com.example.entity
-      configuration:
-        map-underscore-to-camel-case: true
-        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-        spring:
-          datasource:
-            type: com.alibaba.druid.pool.DruidDataSource
-            driver-class-name: com.mysql.cj.jdbc.Driver
-            url: jdbc:mysql://localhost:3306/tlias?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
-            username: root
-            password: root
-            druid:
-              initial-size: 5
-              max-active: 20
-              min-idle: 5
-              max-wait: 60000
-
+# 下面的 druid 配置需要先引入 druid-spring-boot-starter 依赖才生效，
+# 当前 pom 里没有这个依赖，所以先注释掉，需要时再加依赖并放开。
+#  spring:
+#    datasource:
+#      type: com.alibaba.druid.pool.DruidDataSource
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+#      url: jdbc:mysql://localhost:3306/tlias?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
+#      username: root
+#      password: root
+#      druid:
+#        initial-size: 5
+#        max-active: 20
+#        min-idle: 5
+#        max-wait: 60000
 
 jwt:
   # 密钥，至少256位，自己改长一点

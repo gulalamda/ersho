@@ -15,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IGoodsService extends IService<Goods> {
 
     Result Selectgoods(String name);
+
 }
