@@ -1,12 +1,30 @@
+server:
+  port: ${SERVER_PORT:8080}
+  # 打开 gzip：前端打包产物 1.2MB 左右，压缩后 ~350KB。
+  # 走 cloudflared 隧道/校园网这类弱网时，这一项差别非常明显。
+  compression:
+    enabled: true
+    mime-types: text/html,text/css,text/plain,application/javascript,text/javascript,application/json,application/xml,image/svg+xml
+    min-response-size: 1024
+  # 关键：前端 axios 的 baseURL 写死是 /api，开发时靠 vite 代理把 /api 前缀抹掉；
+  # 打成 jar 后没有 vite 了，接口会变成 404。这里把应用整体挂到 /api 下，
+  # 于是 /api/goods/select 正好命中 @RequestMapping("/goods")，前端不用改也不用重新 build。
+  # 本地开发时浏览器要开 http://localhost:8080/api/，vite 代理已同步去掉 rewrite。
+  servlet:
+    context-path: ${SERVER_CONTEXT_PATH:/api}
+
 spring:
   application:
     name: ersho
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/tlias?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
-    username: root
-    password: root
+    # allowPublicKeyRetrieval=true：MySQL 8 默认用 caching_sha2_password，
+    # 在 useSSL=false 的情况下不给这个参数就会直接报 "Public Key Retrieval is not allowed"，连不上库。
+    # 写成 ${ENV:默认值} 形式，Docker 里用环境变量覆盖即可，不用重新打包。
+    url: ${MYSQL_URL:jdbc:mysql://localhost:3306/tlias?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true}
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:root}
 
 # 注意：这里原来是缩进错位的，mybatis-plus 被写成了 spring.datasource.mybatis-plus，
 # 所以下面这些配置一个都没生效。现在提到顶层。
@@ -32,8 +50,5 @@ mybatis-plus:
 #        min-idle: 5
 #        max-wait: 60000
 
-jwt:
-  # 密钥，至少256位，自己改长一点
-  secretKey: abcdefghijklmnabcdefghijklmnabcdefghijklmnihiohihoihiohiohoi
-  # token过期时间，单位毫秒，这里设置1小时
-  expireTime: 3600000
+# JWT 密钥通过环境变量 JWT_SECRET 设置（至少 32 字节）。
+# 不设置时自动生成临时密钥，重启后需要重新登录。

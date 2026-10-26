@@ -31,3 +31,18 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Docker / 部署 ###
+# 含数据库密码，不入库；别人拿到项目用 deploy/.env.example 复制一份
+.env
+!.env.example
+
+### 本次调试产生的临时文件 ###
+.acl-recovery/
+.npm-cache/
+.agent-browser-home/
+*.log
+_verify-*.sql
+_verify-*.txt
+_parts/
+*_verify.part

@@ -4,25 +4,20 @@ package org.example.ersho.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import lombok.Data;
 import org.example.ersho.Service.IGoodsService;
 import org.example.ersho.Service.IOrdersService;
 import org.example.ersho.entity.Goods;
 import org.example.ersho.entity.Orders;
-import org.example.ersho.entityDto.Result;
+import org.example.ersho.entity.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.web.server.authentication.AnonymousAuthenticationWebFilter;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-
-import static org.example.ersho.util.JwtUtil.parseToken;
 
 /**
  * <p>
@@ -125,7 +120,7 @@ public class OrdersController {
         }
         orders.setStatus(status);
         ordersService.updateById(orders);
-        return Result.success("当前已发货");
+        return Result.success(Integer.valueOf(1).equals(status) ? "已发货" : "已确认收货");
     }
 
 

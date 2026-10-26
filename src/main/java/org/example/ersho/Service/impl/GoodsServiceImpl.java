@@ -1,8 +1,8 @@
 package org.example.ersho.Service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.ersho.entityDto.Result;
 import org.example.ersho.entity.Goods;
+import org.example.ersho.entity.Result;
 import org.example.ersho.mapper.GoodsMapper;
 import org.example.ersho.Service.IGoodsService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

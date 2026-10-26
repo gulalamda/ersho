@@ -46,6 +46,10 @@ public class Goods implements Serializable {
 
     @ApiModelProperty(value = "商品简介")
     private String description;
+
+    @ApiModelProperty(value = "商品图片地址")
+    @com.baomidou.mybatisplus.annotation.TableField(updateStrategy = com.baomidou.mybatisplus.annotation.FieldStrategy.ALWAYS)
+    private String imageUrl;
     @ApiModelProperty(value = "主人")
     private Integer sellerId;
 

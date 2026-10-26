@@ -1,0 +1,42 @@
+/* ============================================================
+   二手集市 · 设计变量
+   概念：校园布告栏 —— 黑板绿 + 纸张白 + 红笔朱砂 + 荧光笔黄
+   价签小圆角 + 硬投影（不是 SaaS 那种柔和灰阴影）
+   ============================================================ */
+:root {
+  /* 颜色 */
+  --board: #14453a;
+  --board-deep: #0c2e27;
+  --board-soft: #1d5a4b;
+  --paper: #f4f6f1;
+  --card: #ffffff;
+  --line: #cfd8ce;
+  --line-strong: #a8b8ab;
+  --ink: #17302a;
+  --ink-soft: #52685e;
+  --marker: #ce3b26;
+  --marker-soft: #f7e3df;
+  --highlight: #f3c44b;
+  --highlight-soft: #fdf3d6;
+  --chalk: #e8f0e9;
+  --chalk-soft: #9dbdae;
+
+  /* 排版：拉丁字母用 Archivo（自带，离线可用），中文走系统字体栈 */
+  --font-latin: 'Archivo Variable', 'Archivo', system-ui, sans-serif;
+  --font-ui: 'Archivo Variable', 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Noto Sans SC',
+    sans-serif;
+
+  /* 形状 */
+  --r-sm: 2px;
+  --r-md: 3px;
+  --r-lg: 5px;
+  --shadow-tag: 3px 3px 0 rgba(20, 69, 58, 0.13);
+  --shadow-tag-lift: 6px 6px 0 rgba(20, 69, 58, 0.2);
+  --shadow-pop: 0 12px 32px rgba(12, 46, 39, 0.16);
+
+  /* 尺度 */
+  --w-page: 1180px;
+  --h-masthead: 64px;
+  --gap: 20px;
+}

@@ -1,0 +1,170 @@
+/* ===================== 基础重置 ===================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* 键盘可达性：统一的可见焦点环 */
+:focus-visible {
+  outline: 2px solid var(--marker);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+::selection {
+  background: var(--highlight);
+  color: var(--board-deep);
+}
+
+/* ===================== Element Plus 主题对齐 ===================== */
+:root {
+  --el-color-primary: #14453a;
+  --el-color-primary-light-3: #3a6d5f;
+  --el-color-primary-light-5: #5d8a7d;
+  --el-color-primary-light-7: #93b0a7;
+  --el-color-primary-light-8: #b6c9c2;
+  --el-color-primary-light-9: #dfe8e4;
+  --el-color-primary-dark-2: #0c2e27;
+  --el-color-danger: #ce3b26;
+  --el-color-error: #ce3b26;
+  --el-color-warning: #b8860b;
+  --el-color-success: #2f7a4f;
+  --el-border-radius-base: 3px;
+  --el-border-radius-small: 2px;
+  --el-font-family: var(--font-ui);
+  --el-text-color-primary: #17302a;
+  --el-text-color-regular: #3c534b;
+  --el-text-color-secondary: #52685e;
+  --el-text-color-placeholder: #93a49b;
+  --el-border-color: #cfd8ce;
+  --el-border-color-light: #dde4dc;
+  --el-border-color-lighter: #e7ece6;
+  --el-fill-color-blank: #ffffff;
+  --el-box-shadow-light: 0 6px 20px rgba(12, 46, 39, 0.1);
+}
+
+.el-button {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.el-button:active {
+  transform: translateY(1px);
+}
+
+.el-input__wrapper,
+.el-textarea__inner,
+.el-select__wrapper {
+  box-shadow: 0 0 0 1px var(--line) inset;
+}
+
+.el-input__wrapper.is-focus,
+.el-textarea__inner:focus,
+.el-select__wrapper.is-focused {
+  box-shadow: 0 0 0 1px var(--board) inset !important;
+}
+
+.el-dialog {
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-pop);
+}
+
+.el-dialog__title {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.el-message {
+  border-radius: var(--r-md);
+  border-width: 1px;
+}
+
+/* ===================== 通用工具类 ===================== */
+.shell {
+  width: 100%;
+  max-width: var(--w-page);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* 拉丁字母/数字：等宽数字，价格对齐不会跳 */
+.num {
+  font-family: var(--font-latin);
+  font-feature-settings: 'tnum' 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+}
+
+.hairline {
+  height: 1px;
+  background: var(--line);
+  border: 0;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* 尊重系统的“减弱动态效果”设置 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -2,7 +2,7 @@ package org.example.ersho.Service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.example.ersho.entityDto.LoginDto;
-import org.example.ersho.entityDto.Student;
+import org.example.ersho.entity.Student;
 import org.example.ersho.entityVo.LoginVo;
 import org.example.ersho.mapper.StudentMapper;
 import org.example.ersho.Service.IStudentService;
@@ -21,11 +21,19 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     private PasswordEncoder passwordEncoder;
     @Override
     public LoginVo login(LoginDto loginDto) {
+        
+        // 原来用的是 .one()：库里只要有两条同名记录就会直接抛异常（500）。
+        // 这里改成取同名记录里密码对得上的那条，历史脏数据也不会把登录搞挂。
         Student student = lambdaQuery()
                 .eq(Student::getName, loginDto.getName())
-                .one();
+                .list()
+                .stream()
+                .filter(s -> s.getPassword() != null
+                        && passwordEncoder.matches(loginDto.getPassword(), s.getPassword()))
+                .findFirst()
+                .orElse(null);
 
-        if (student == null || !passwordEncoder.matches(loginDto.getPassword(), student.getPassword())) {
+        if (student == null) {
             throw new BizException("用户名或密码错误");
         }
 

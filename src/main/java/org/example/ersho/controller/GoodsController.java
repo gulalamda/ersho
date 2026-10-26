@@ -2,19 +2,15 @@ package org.example.ersho.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.extension.conditions.update.UpdateChainWrapper;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+
 import lombok.extern.slf4j.Slf4j;
 import org.example.ersho.entity.Goods;
-import org.example.ersho.entityDto.Result;
-import org.example.ersho.entityDto.Student;
-import org.example.ersho.util.JwtUtil;
+import org.example.ersho.entity.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -49,7 +45,6 @@ public class GoodsController {
         Integer userId=(Integer) request.getAttribute("userId");
         goods.setSellerId(userId);
 
-        goodsService.save(goods);
         return Result.success(goodsService.save(goods));
     }
     //token来查看自己的商品
@@ -69,7 +64,10 @@ public class GoodsController {
     if (!Objects.equals(Dbgoods.getSellerId(),userId)){
         return Result.error("不是本人商品");
     }
-    goodsService.updateById(Dbgoods);
+    // 这里要落库的是前端提交上来的 goods，直接写回 Dbgoods 等于什么都没改
+    goods.setId(Dbgoods.getId());
+    goods.setSellerId(userId);
+    goodsService.updateById(goods);
         return Result.success("修改成功");
     }
     @DeleteMapping("/deleteGoods")
@@ -87,7 +85,13 @@ public class GoodsController {
     @GetMapping("/mina")
     public Result mina(HttpServletRequest request) {
         Integer userId = (Integer) request.getAttribute("userId");
-        return Result.success(goodsService.list(new LambdaQueryWrapper<Goods>().ne(Goods::getSellerId,userId)));
+        LambdaQueryWrapper<Goods> wrapper = new LambdaQueryWrapper<>();
+        // 没登录时 userId 是 null，而 SQL 里 seller_id <> NULL 永远不成立，
+        // 会让集市对游客显示成空的。所以只有登录了才排除自己的商品。
+        if (userId != null) {
+            wrapper.ne(Goods::getSellerId, userId);
+        }
+        return Result.success(goodsService.list(wrapper));
     }
 
 

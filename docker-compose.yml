@@ -1,0 +1,71 @@
+# ============================================================
+# 二手集市（ersho）单容器部署编排
+#
+# 场景：MySQL 已经装在 192.168.136.131 这台机器上（不是 Docker 里的），
+#       app 容器通过 host.docker.internal 连宿主机的 3306。
+#       若连不上，见 deploy/README.md 的"排查"章节。
+#
+# 用法：
+#   docker compose up -d --build       # 首次：构建 + 启动
+#   docker compose logs -f app         # 看应用日志
+#   docker compose down                # 停止（MySQL 数据不受影响）
+# ============================================================
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ersho:1.0
+    container_name: ersho-app
+    restart: unless-stopped
+    ports:
+      # 左边是虚拟机上对外暴露的端口，右边是容器内端口（别改）
+      - "${APP_PORT:-8081}:8080"
+    environment:
+      # ---- 数据库：指向宿主机上已有的 MySQL ----
+      # host.docker.internal 由下面的 extra_hosts 映射到宿主机网关
+      MYSQL_URL: "jdbc:mysql://${DB_HOST:-host.docker.internal}:${DB_PORT:-3306}/${DB_NAME:-tlias}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true"
+      MYSQL_USERNAME: "${DB_USERNAME:-root}"
+      MYSQL_PASSWORD: "${DB_PASSWORD:-root}"
+      # ---- 应用自身 ----
+      JWT_SECRET: "${JWT_SECRET:-}"
+      SERVER_PORT: "8080"
+      SERVER_CONTEXT_PATH: "/api"
+      TZ: "Asia/Shanghai"
+      JAVA_OPTS: "-XX:MaxRAMPercentage=75 -Duser.timezone=Asia/Shanghai -Dfile.encoding=UTF-8"
+    extra_hosts:
+      # Linux 上 host.docker.internal 默认不存在，这一行手工补上（Docker 20.10+ 支持）
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8080/api/ || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 45s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ============================================================
+  # 可选：cloudflared 快速隧道，临时把服务暴露到公网
+  #
+  #   docker compose --profile tunnel up -d
+  #   docker compose logs cloudflared | grep trycloudflare.com
+  #
+  # quick tunnel 只转发不改写路径，公网入口是 https://xxxx.trycloudflare.com/api/
+  # （前端的 vite base 已在打包时设为 /api/，资源引用才和 context-path 对得上）
+  #
+  # 注意：这份 compose 和 Desktop\da\docker-compose.yml 是二选一，
+  # 两者都用容器名 ersho-app、端口 8081，别同时启动。
+  # ============================================================
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: ersho-tunnel
+    profiles: ["tunnel"]
+    restart: unless-stopped
+    command: tunnel --no-autoupdate --url http://app:8080
+    depends_on:
+      app:
+        condition: service_healthy

@@ -4,10 +4,9 @@
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
 https://maven.apache.org/xsd/settings-1.0.0.xsd">
 
-    <!-- 本地仓库：C 盘这个仓库里已经缓存了本项目 Boot 3 + MyBatis-Plus 的绝大部分依赖 -->
-    <localRepository>C:/Users/wdf/.m2/repository</localRepository>
+    <!-- 使用 Maven 默认本地仓库，支持在其他电脑直接运行 -->
 
-    <!-- 阿里云镜像：比 Maven 中央仓库在国内快很多，之前实测可正常下载 -->
+
     <mirrors>
         <mirror>
             <id>aliyunmaven</id>

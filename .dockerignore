@@ -1,0 +1,29 @@
+# 构建上下文瘦身 + 防止把本机产物/密钥带进镜像
+target/
+.idea/
+.git/
+.gitattributes
+.gitignore
+.acl-recovery/
+.npm-cache/
+.agent-browser-home/
+
+# 前端源码不参与 Maven 构建，打好的静态资源已经在 src/main/resources/static 里
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# 本机日志和临时文件
+*.log
+*.http
+HELP.md
+mvnw
+mvnw.cmd
+settings.xml
+
+# 部署脚本和文档也不用进镜像
+deploy/*.sh
+deploy/*.md
+deploy/*.sql
+docker-compose*.yml
+.env

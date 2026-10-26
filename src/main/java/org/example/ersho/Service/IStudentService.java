@@ -1,7 +1,7 @@
 package org.example.ersho.Service;
 
 import org.example.ersho.entityDto.LoginDto;
-import org.example.ersho.entityDto.Student;
+import org.example.ersho.entity.Student;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.example.ersho.entityVo.LoginVo;
 

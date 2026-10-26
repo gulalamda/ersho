@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
+
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -11,9 +12,16 @@ import java.util.Map;
 
 public class JwtUtil {
 
+    // 未配置时生成本次运行专用密钥；部署时设置 JWT_SECRET，避免重启后登录失效。
+    private static final SecretKey KEY = signingKey();
 
-    private static final String SE_KEY = "5oiR5pyJ54K56K6o5Y6M5L2g5LqG5Y6M54Om5L2g5LqG";
-    private static final SecretKey KEY = Keys.hmacShaKeyFor(SE_KEY.getBytes(StandardCharsets.UTF_8));
+    private static SecretKey signingKey() {
+        String secret = System.getenv("JWT_SECRET");
+        if (secret == null || secret.isBlank()) {
+            return Jwts.SIG.HS256.key().build();
+        }
+        return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    }
     private static final long EX_TIME = 24 * 60 * 60 * 1000L;
     private JwtUtil() {
     }
@@ -34,11 +42,5 @@ public class JwtUtil {
                 .parseSignedClaims(token)
                 .getPayload();
 
-    }
-    public static Integer parseuserId(String token){
-        return (Integer)parseToken(token).get("id");
-    }
-    public static String parseuseraddress(String token){
-        return (String) parseToken(token).get("address");
     }
 }

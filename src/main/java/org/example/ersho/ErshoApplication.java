@@ -6,7 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 
 @SpringBootApplication
-@MapperScan("org.example.ersho.Mapper")
+
+@MapperScan("org.example.ersho.mapper")
 @ServletComponentScan
 public class ErshoApplication {
 

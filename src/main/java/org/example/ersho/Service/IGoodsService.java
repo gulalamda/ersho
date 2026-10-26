@@ -1,8 +1,8 @@
 package org.example.ersho.Service;
 
-import org.example.ersho.entityDto.Result;
 import org.example.ersho.entity.Goods;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.example.ersho.entity.Result;
 
 /**
  * <p>

@@ -1,4 +1,4 @@
-package org.example.ersho.entityDto;
+package org.example.ersho.entity;
 
 import lombok.Data;
 

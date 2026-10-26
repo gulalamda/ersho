@@ -1,0 +1,54 @@
+# ============================================================
+# 备选方案：如果 VM 上【没有】MySQL，用这个把 MySQL 也一起容器化
+#
+# 用法：
+#   docker compose -f deploy/docker-compose.db.yml up -d      # 起数据库
+#   docker compose up -d --build                              # 起应用（用根目录那个 compose）
+#
+# 注意两个 compose 文件会创建同一个网络 ersho-net，
+# 所以应用容器能用服务名 "mysql" 连到数据库。
+# 需要把根目录 .env 改成：
+#   DB_HOST=mysql
+#   DB_USERNAME=ersho
+#   DB_PASSWORD=ersho123
+#
+# 首次启动时 deploy/sql/01-init.sql 会被自动执行（只在数据卷为空时跑一次）。
+# ============================================================
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: ersho-mysql
+    restart: unless-stopped
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_0900_ai_ci
+      - --default-time-zone=+08:00
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-root123}"
+      MYSQL_DATABASE: "${DB_NAME:-tlias}"
+      # 初始化脚本里也建了这个账号，这里再声明一次保证一致
+      MYSQL_USER: "${DB_USERNAME:-ersho}"
+      MYSQL_PASSWORD: "${DB_PASSWORD:-ersho123}"
+      TZ: Asia/Shanghai
+    ports:
+      # 只监听本机，不对外暴露数据库端口；想用客户端连再改成 "3306:3306"
+      - "127.0.0.1:${DB_PORT:-3306}:3306"
+    volumes:
+      - ersho-mysql-data:/var/lib/mysql
+      # 官方镜像会自动执行这个目录下的 *.sql（按文件名排序）
+      - ./sql:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+    networks:
+      - ersho-net
+
+volumes:
+  ersho-mysql-data:
+
+networks:
+  ersho-net:
+    name: ersho-net
